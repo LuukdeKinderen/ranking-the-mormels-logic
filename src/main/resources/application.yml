@@ -1,0 +1,10 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: ranking-the-mormels
+eureka:
+  client:
+    service-url:
+      defaultZone: https://ranking-the-mormels-discovery.herokuapp.com:8761/eureka/,http://localhost:8761/eureka/
+
