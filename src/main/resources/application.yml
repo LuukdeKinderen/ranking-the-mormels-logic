@@ -6,5 +6,5 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: https://ranking-the-mormels-discovery.herokuapp.com/eureka/,http://localhost:8761/eureka/
+      defaultZone: https://ranking-the-mormels-discovery.herokuapp.com/eureka/
 

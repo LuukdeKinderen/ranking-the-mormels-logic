@@ -2,6 +2,7 @@ package nl.luukdekinderen.rankingthemormels.resources;
 
 import nl.luukdekinderen.rankingthemormels.models.GameRoom;
 import nl.luukdekinderen.rankingthemormels.models.Player;
+import nl.luukdekinderen.rankingthemormels.models.Question;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,9 @@ public class RoomController {
     @Autowired
     private RoomService roomService;
 
+    @Autowired
+    private QuestionService questionService;
+
 
     @Autowired
     public void RoomController() {
@@ -33,6 +37,10 @@ public class RoomController {
 
     @MessageMapping("/room/create")
     public void addRooms(@Payload GameRoom gameRoom, SimpMessageHeaderAccessor headerAccessor) {
+        //TODO: varialble questioncount
+        Question[] questions = questionService.getQuestions(10);
+        gameRoom.setQuestions(questions);
+
         String roomId = gameRoom.getId();
         Player player = gameRoom.getPlayers().get(0);
         player.setImageIndex(0);

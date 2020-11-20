@@ -4,6 +4,7 @@ import nl.luukdekinderen.rankingthemormels.models.GameRoom;
 
 import nl.luukdekinderen.rankingthemormels.models.Player;
 import nl.luukdekinderen.rankingthemormels.models.Question;
+import nl.luukdekinderen.rankingthemormels.models.Ranking;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +47,7 @@ public class GameController {
             messagingTemplate.convertAndSend("/room/" + roomId, message.toString());
         }
     }
+
 
     @MessageMapping("/game/{roomId}/state")
     public void gameState(@DestinationVariable String roomId, @Payload Player player) {

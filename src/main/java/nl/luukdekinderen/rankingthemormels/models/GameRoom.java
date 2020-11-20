@@ -1,6 +1,7 @@
 package nl.luukdekinderen.rankingthemormels.models;
 
 
+
 import org.json.JSONObject;
 
 import java.util.List;
@@ -11,11 +12,10 @@ public class GameRoom {
     private String id;
     private List<Player> players;
     private int currentQuestionCount;
-    private String[] questionIds;
+    private Question[] questions;
 
     public GameRoom(){
         currentQuestionCount = -1;
-        //TODO use Question service to fill questionIds
     }
 
     public boolean AddPlayer(Player newPlayer) {
@@ -41,7 +41,8 @@ public class GameRoom {
         //TODO use Question service
 
         if (currentQuestionCount > -1) {
-            return "Wie kan het meeste bier op";
+            Question question = questions[currentQuestionCount];
+            return question.getQuestion();
         }
         return null;
     }
@@ -115,5 +116,9 @@ public class GameRoom {
             }
         }
         return false;
+    }
+
+    public void setQuestions(Question[] questions) {
+        this.questions = questions;
     }
 }

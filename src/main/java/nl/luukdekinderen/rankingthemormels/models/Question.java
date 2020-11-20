@@ -1,41 +1,37 @@
 package nl.luukdekinderen.rankingthemormels.models;
 
 public class Question {
-    enum AnnotationLevel {
-        first,
-        second,
-        third,
-        lastBest
-    }
 
-    private int id;
+    private Integer questionId;
     private String question;
     private String firstPersAnnotation;
-    private String secondPersAnnotation;
-    private String thirdPersAnnotation;
     private String lastBestAnnotation;
 
-    public int getQuestionId() {
-        return id;
+    public Question() {
+
+    }
+
+    public Question(Integer questionId, String question, String firstPersAnnotation, String lastBestAnnotation) {
+        this.questionId = questionId;
+        this.question = question;
+        this.firstPersAnnotation = firstPersAnnotation;
+        this.lastBestAnnotation = lastBestAnnotation;
+    }
+
+    public Integer getQuestionId() {
+        return questionId;
     }
 
     public String getQuestion() {
         return question;
     }
 
-    public String getAnnotation(AnnotationLevel annotationLevel) {
-        switch (annotationLevel) {
-            case first:
-                return firstPersAnnotation;
-            case second:
-                return secondPersAnnotation;
-            case third:
-                return thirdPersAnnotation;
-            case lastBest:
-                return lastBestAnnotation;
-            default:
-                return null;
-        }
+    public String getFirstPersAnnotation() {
+        return firstPersAnnotation;
     }
 
+    public String getLastBestAnnotation() {
+        return lastBestAnnotation;
+    }
 }
+
