@@ -12,20 +12,13 @@ public class QuestionService {
     private RestTemplate restTemplate;
 
 
-
     @Autowired
     public void QuestionService() {
 
     }
 
     public Question[] getQuestions(Integer questionCount) {
-       Question[] questions = new Question[questionCount];
-
-        for (Integer i = 0; i < questionCount; i++) {
-            Question question = restTemplate.getForObject("http://ranking-the-mormels-questions/question/" + i, Question.class);
-
-            questions[i] = question;
-        }
+        Question[] questions = restTemplate.getForObject("http://ranking-the-mormels-questions/question/random/" + questionCount, Question[].class);
         return questions;
     }
 
