@@ -38,8 +38,6 @@ public class GameRoom {
     }
 
     public String getQuestion() {
-        //TODO use Question service
-
         if (currentQuestionCount > -1) {
             Question question = questions[currentQuestionCount];
             return question.getQuestion();

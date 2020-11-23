@@ -18,12 +18,12 @@ public class QuestionService {
     }
 
     public Question[] getQuestions(Integer questionCount) {
-        Question[] questions = restTemplate.getForObject("http://ranking-the-mormels-questions/question/random/" + questionCount, Question[].class);
+        Question[] questions = restTemplate.getForObject("https://ranking-the-mormels-questions.herokuapp.com/question/random/" + questionCount, Question[].class);
         return questions;
     }
 
     public Question getQuestion(Integer id) {
-        Question question = restTemplate.getForObject("http://ranking-the-mormels-questions/question/" + id, Question.class);
+        Question question = restTemplate.getForObject("https://ranking-the-mormels-questions.herokuapp.com/question/" + id, Question.class);
         return question;
     }
 
