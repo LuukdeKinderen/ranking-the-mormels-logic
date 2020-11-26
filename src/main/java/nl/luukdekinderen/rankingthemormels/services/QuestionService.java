@@ -1,7 +1,8 @@
-package nl.luukdekinderen.rankingthemormels.resources;
+package nl.luukdekinderen.rankingthemormels.services;
 
 import nl.luukdekinderen.rankingthemormels.models.Question;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -11,6 +12,8 @@ public class QuestionService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Value("${questionservice.uri}")
+    private String questionUri;
 
     @Autowired
     public void QuestionService() {
@@ -18,12 +21,12 @@ public class QuestionService {
     }
 
     public Question[] getQuestions(Integer questionCount) {
-        Question[] questions = restTemplate.getForObject("https://ranking-the-mormels-questions.herokuapp.com/question/random/" + questionCount, Question[].class);
+        Question[] questions = restTemplate.getForObject(questionUri + "/question/random/" + questionCount, Question[].class);
         return questions;
     }
 
     public Question getQuestion(Integer id) {
-        Question question = restTemplate.getForObject("https://ranking-the-mormels-questions.herokuapp.com/question/" + id, Question.class);
+        Question question = restTemplate.getForObject(questionUri + "/question/" + id, Question.class);
         return question;
     }
 
