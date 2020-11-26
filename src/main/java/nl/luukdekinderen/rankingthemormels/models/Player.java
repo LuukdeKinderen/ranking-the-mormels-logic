@@ -8,9 +8,21 @@ public class Player {
     private String name;
     private int imageIndex;
     private int drinkCount;
-    private boolean host;
-
+    private Boolean host;
+    private Boolean active;
     private Ranking ranking;
+
+    public Player(){
+        active = true;
+    }
+
+    public Boolean isActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 
     public String getId() {
         return id;

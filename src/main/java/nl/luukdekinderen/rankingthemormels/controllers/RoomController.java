@@ -1,5 +1,8 @@
-package nl.luukdekinderen.rankingthemormels.resources;
+package nl.luukdekinderen.rankingthemormels.controllers;
 
+import nl.luukdekinderen.rankingthemormels.eventListeners.WebSocketEventListener;
+import nl.luukdekinderen.rankingthemormels.services.QuestionService;
+import nl.luukdekinderen.rankingthemormels.services.RoomService;
 import nl.luukdekinderen.rankingthemormels.models.GameRoom;
 import nl.luukdekinderen.rankingthemormels.models.Player;
 import nl.luukdekinderen.rankingthemormels.models.Question;
@@ -10,9 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -46,7 +53,7 @@ public class RoomController {
         player.setImageIndex(0);
 
         headerAccessor.getSessionAttributes().put("room_id", roomId);
-        headerAccessor.getSessionAttributes().put("username", player.getName());
+        headerAccessor.getSessionAttributes().put("id", player.getId());
 
         boolean added = roomService.addRoom(gameRoom);
 
@@ -54,35 +61,37 @@ public class RoomController {
             logger.info("Room created: " + roomId);
 
             JSONObject message = new JSONObject();
-            message.put("players", gameRoom.getPlayerObjects());
-            message.put("joinRoom", player.toJSONObject());
+
+            List<JSONObject> players = getPlayerObjs(gameRoom);
+            message.put("players", players);
+
+            JSONObject playerObj = player.toJSONObject();
+            message.put("joinRoom", playerObj);
 
             messagingTemplate.convertAndSend("/room/" + roomId, message.toString());
         } else {
-            sendError(
-                    roomId,
+            messagingTemplate.convertAndSend("/room/" + roomId, getError(
                     player,
                     "Room already exists"
-            );
+            ));
         }
     }
 
 
     @MessageMapping("/room/{roomId}/addPlayer")
-    public void joinRoom(@DestinationVariable String roomId, @Payload Player newPlayer, SimpMessageHeaderAccessor headerAccessor) {
+    @SendTo("/room/{roomId}")
+    public String joinRoom(@DestinationVariable String roomId, @Payload Player newPlayer, SimpMessageHeaderAccessor headerAccessor) {
 
         headerAccessor.getSessionAttributes().put("room_id", roomId);
-        headerAccessor.getSessionAttributes().put("username", newPlayer.getName());
+        headerAccessor.getSessionAttributes().put("id", newPlayer.getId());
 
         GameRoom gameRoom = roomService.getRoom(roomId);
 
         if (gameRoom == null) {
-            sendError(
-                    roomId,
+            return getError(
                     newPlayer,
                     "Room " + roomId + " does not exist"
             );
-            return;
         }
 
         boolean added = gameRoom.AddPlayer(newPlayer);
@@ -91,28 +100,38 @@ public class RoomController {
             logger.info("Player \"" + newPlayer.getName() + "\" joined room: " + roomId);
 
             JSONObject message = new JSONObject();
-            message.put("players", gameRoom.getPlayerObjects());
-            message.put("joinRoom", newPlayer.toJSONObject());
 
-            messagingTemplate.convertAndSend("/room/" + roomId, message.toString());
+            List<JSONObject> players = getPlayerObjs(gameRoom);
+            message.put("players",players);
+
+            JSONObject playerObj = newPlayer.toJSONObject();
+            message.put("joinRoom", playerObj);
+
+            return message.toString();
+
         } else {
-            sendError(
-                    roomId,
+            return getError(
                     newPlayer,
                     "Player name \"" + newPlayer.getName() + "\" already exists in room: " + roomId
             );
         }
+
     }
 
+    private List<JSONObject> getPlayerObjs(GameRoom gameRoom) {
+        return gameRoom.getPlayers().stream()
+                .map(Player::toJSONObject)
+                .collect(Collectors.toList());
+    }
 
-    private void sendError(String roomId, Player player, String message) {
+    private String getError(Player player, String message) {
         logger.info(message);
 
         JSONObject error = new JSONObject();
         error.put("error", message);
         error.put("player", player.toJSONObject());
 
-        messagingTemplate.convertAndSend("/room/" + roomId, error.toString());
+        return error.toString();
     }
 
 }

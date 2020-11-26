@@ -3,8 +3,9 @@ server:
 spring:
   application:
     name: ranking-the-mormels
+questionservice:
+  uri: http://localhost:8081
 eureka:
   client:
     service-url:
       defaultZone: https://ranking-the-mormels-discovery.herokuapp.com/eureka/
-
