@@ -11,26 +11,15 @@ public class Question {
 
     }
 
-    public Question(Integer questionId, String question, String firstPersAnnotation, String lastBestAnnotation) {
-        this.questionId = questionId;
-        this.question = question;
-        this.firstPersAnnotation = firstPersAnnotation;
-        this.lastBestAnnotation = lastBestAnnotation;
-    }
-
-    public Integer getQuestionId() {
-        return questionId;
-    }
-
     public String getQuestion() {
         return question;
     }
 
-    public String getFirstPersAnnotation() {
+    public String getFirstPersAnnotation(){
         return firstPersAnnotation;
     }
 
-    public String getLastBestAnnotation() {
+    public String getLastBestAnnotation(){
         return lastBestAnnotation;
     }
 }

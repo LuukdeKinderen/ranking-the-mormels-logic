@@ -3,6 +3,7 @@ package nl.luukdekinderen.rankingthemormels.services;
 import nl.luukdekinderen.rankingthemormels.models.GameRoom;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public class RoomService {
 
     private List<GameRoom> rooms;
 
-    @Autowired
+    @Bean
     public void RoomService(){
         rooms = new ArrayList<GameRoom>();
     }
