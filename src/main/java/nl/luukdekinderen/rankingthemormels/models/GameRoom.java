@@ -1,9 +1,7 @@
 package nl.luukdekinderen.rankingthemormels.models;
 
 
-import org.json.JSONObject;
-
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GameRoom {
@@ -35,6 +33,7 @@ public class GameRoom {
         }
         return false;
     }
+
     public Player getPlayer(String id) {
         Player foundPlayer = players.stream()
                 .filter(player -> player.getId().equals(id))
@@ -42,15 +41,18 @@ public class GameRoom {
                 .orElse(null);
         return foundPlayer;
     }
+
     public List<Player> getPlayers() {
         return players.stream()
                 .filter(p -> p.isActive())
                 .collect(Collectors.toList());
     }
-    public Boolean getIsAllInActive (){
 
-       return players.stream().allMatch(p -> !p.isActive());
+    public Boolean getIsAllInActive() {
+
+        return players.stream().allMatch(p -> !p.isActive());
     }
+
     public Boolean isRealHost(String playerId) {
         for (Player player : players) {
             if (player.getId().equals(playerId) && player.isHost()) {
@@ -59,42 +61,40 @@ public class GameRoom {
         }
         return false;
     }
-    public void setPlayerActiveStatus(String id, Boolean active){
+
+    public void setPlayerActiveStatus(String id, Boolean active) {
         Player player = getPlayer(id);
         player.setActive(active);
     }
 
-    public String getQuestion() {
+    public Question getQuestion() {
         if (currentQuestionCount > -1) {
             Question question = questions[currentQuestionCount];
-            return question.getQuestion();
+            return question;
         }
         return null;
     }
+
     public void nextQuestion() {
         currentQuestionCount++;
         for (Player player : players) {
             player.setRanking(null);
         }
     }
+
     public void addRanking(String playerId, Ranking ranking) {
         Player player = getPlayer(playerId);
         player.setRanking(ranking);
     }
+
     public void setQuestions(Question[] questions) {
         this.questions = questions;
     }
 
-    public Boolean isDoneRanking(){
-        Boolean isAllDone = players.stream().allMatch(player -> player.getRanking()!=null);
+    public Boolean isDoneRanking() {
+        Boolean isAllDone = players.stream().allMatch(player -> player.getRanking() != null);
         return isAllDone;
     }
-
-
-
-
-
-
 
 
 

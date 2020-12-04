@@ -1,6 +1,7 @@
 package nl.luukdekinderen.rankingthemormels.controllers;
 
 import nl.luukdekinderen.rankingthemormels.eventListeners.WebSocketEventListener;
+import nl.luukdekinderen.rankingthemormels.models.Result;
 import nl.luukdekinderen.rankingthemormels.services.RoomService;
 import nl.luukdekinderen.rankingthemormels.models.GameRoom;
 
@@ -43,7 +44,7 @@ public class GameController {
             room.nextQuestion();
 
             JSONObject message = new JSONObject();
-            message.put("question", room.getQuestion());
+            message.put("question", room.getQuestion().getQuestion());
 
             return message.toString();
         }
@@ -67,7 +68,7 @@ public class GameController {
 
         JSONObject message = new JSONObject();
 
-        String question = gameRoom.getQuestion();
+        String question = gameRoom.getQuestion().getQuestion();
         message.put("question", question);
 
         List<JSONObject> players = getPlayerObjs(gameRoom);
@@ -81,19 +82,32 @@ public class GameController {
     }
 
     @MessageMapping("/game/{roomId}/ranking")
-    @SendTo("/room/{roomId}")
-    public String gameRanking(@DestinationVariable String roomId, @Payload Ranking ranking, SimpMessageHeaderAccessor headerAccessor) {
+    public void gameRanking(@DestinationVariable String roomId, @Payload Ranking ranking, SimpMessageHeaderAccessor headerAccessor) {
 
         GameRoom room = roomService.getRoom(roomId);
         String id = (String) headerAccessor.getSessionAttributes().get("id");
 
         room.addRanking(id, ranking);
 
-        JSONObject message = new JSONObject();
-        message.put("rankingState", room.isDoneRanking());
 
-        return message.toString();
+        if(room.isDoneRanking()){
+            logger.info("send result");
+            logger.info(room.getQuestion().getFirstPersAnnotation());
+            logger.info(room.getQuestion().getLastBestAnnotation());
+
+
+            Result result = new Result(room.getPlayers(),room.getQuestion());
+            JSONObject resultJson = result.toJson();
+
+            JSONObject message = new JSONObject();
+
+            message.put("result", resultJson);
+
+            messagingTemplate.convertAndSend("/room/" + roomId, message.toString());
+        }
     }
+
+
 
     private List<JSONObject> getPlayerObjs(GameRoom gameRoom) {
         return gameRoom.getPlayers().stream()

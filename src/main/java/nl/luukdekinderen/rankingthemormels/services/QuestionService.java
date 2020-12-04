@@ -3,6 +3,7 @@ package nl.luukdekinderen.rankingthemormels.services;
 import nl.luukdekinderen.rankingthemormels.models.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,7 +16,7 @@ public class QuestionService {
     @Value("${questionservice.uri}")
     private String questionUri;
 
-    @Autowired
+    @Bean
     public void QuestionService() {
 
     }
