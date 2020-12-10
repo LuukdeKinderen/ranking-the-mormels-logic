@@ -82,7 +82,7 @@ public class GameController {
     }
 
     @MessageMapping("/game/{roomId}/ranking")
-    public void gameRanking(@DestinationVariable String roomId, @Payload Ranking ranking, SimpMessageHeaderAccessor headerAccessor) {
+    public void addRanking(@DestinationVariable String roomId, @Payload Ranking ranking, SimpMessageHeaderAccessor headerAccessor) {
 
         GameRoom room = roomService.getRoom(roomId);
         String id = (String) headerAccessor.getSessionAttributes().get("id");
@@ -91,10 +91,6 @@ public class GameController {
 
 
         if(room.isDoneRanking()){
-            logger.info("send result");
-            logger.info(room.getQuestion().getFirstPersAnnotation());
-            logger.info(room.getQuestion().getLastBestAnnotation());
-
 
             Result result = new Result(room.getPlayers(),room.getQuestion());
             JSONObject resultJson = result.toJson();
