@@ -44,8 +44,8 @@ public class Player {
         return ranking;
     }
 
-    public void setDrinkCount(int drinkCount) {
-        this.drinkCount = drinkCount;
+    public void addDrinkCount(int drinkCount) {
+        this.drinkCount += drinkCount;
     }
 
     public void setRanking(Ranking ranking) {

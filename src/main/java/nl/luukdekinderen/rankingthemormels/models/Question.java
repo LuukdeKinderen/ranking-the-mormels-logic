@@ -19,7 +19,7 @@ public class Question {
         return question;
     }
 
-    public String getFirstPersAnnotation() {
+    public String getFirstAnnotation() {
         return firstAnnotation;
     }
 

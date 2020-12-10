@@ -13,31 +13,28 @@ public class Result {
 
     public Result(List<Player> players, Question question) {
         this.players = players;
+
         Ranking averageRanking = calculateAverageRanking();
 
-        System.out.println(averageRanking.getFirstId());
-
         result = rankingToPlayerList(averageRanking);
-        System.out.println(result.get(0).getId());
 
         Boolean isForFirst = taskIsForFirst(averageRanking);
         isFor = isForFirst ? result.get(0) : result.get(3);
-        System.out.println(isFor.getId());
-
-        System.out.println(question.getFirstPersAnnotation());
-        System.out.println(question.getFirstPersAnnotation());
-        System.out.println(question.getQuestion());
 
         String annotation;
-        if(isForFirst){
-            annotation = question.getFirstPersAnnotation();
-        }else{
+        if (isForFirst) {
+            annotation = question.getFirstAnnotation();
+        } else {
             annotation = question.getLastBestAnnotation();
         }
 
-        task = getTask(annotation);
+        // random int between 2 and 5
+        Integer drinkCount = new Random().nextInt(3) + 2;
+        task = String.format(annotation, drinkCount);
 
-        System.out.println(task);
+
+        Player player = getPlayer(players,isFor.getId());
+        player.addDrinkCount(drinkCount);
     }
 
     public JSONObject toJson() {
@@ -55,7 +52,7 @@ public class Result {
     }
 
 
-    private Player getPlayer(String id) {
+    private Player getPlayer(List<Player> players, String id) {
         Player foundPlayer = players.stream()
                 .filter(player -> player.getId().equals(id))
                 .findAny()
@@ -66,17 +63,17 @@ public class Result {
     private List<Player> rankingToPlayerList(Ranking ranking) {
         List<Player> playerRanking = new ArrayList<Player>();
 
-        playerRanking.add(getPlayer(ranking.getFirstId()));
-        playerRanking.add(getPlayer(ranking.getSecondId()));
-        playerRanking.add(getPlayer(ranking.getThirdId()));
-        playerRanking.add(getPlayer(ranking.getLastBestId()));
+        playerRanking.add(getPlayer(players, ranking.getFirstId()));
+        playerRanking.add(getPlayer(players, ranking.getSecondId()));
+        playerRanking.add(getPlayer(players, ranking.getThirdId()));
+        playerRanking.add(getPlayer(players, ranking.getLastBestId()));
 
         return playerRanking;
     }
 
     private Ranking calculateAverageRanking() {
 
-        Map<String, PlayerScore> playerPoints = new HashMap<String, PlayerScore>(4);
+        Map<String, PlayerScore> playerPoints = new HashMap<>(4);
 
 
         //Fill player ranking points list
@@ -87,7 +84,6 @@ public class Result {
 
         for (Player player : players) {
             Ranking ranking = player.getRanking();
-            System.out.println(playerPoints.get(ranking.getFirstId()).getScore());
 
             playerPoints.get(ranking.getFirstId()).addToScore(5);
             playerPoints.get(ranking.getSecondId()).addToScore(3);
@@ -99,26 +95,20 @@ public class Result {
         playerScores.sort(Comparator.comparing(PlayerScore::getScore));
 
         Ranking ranking = new Ranking(
-                playerScores.get(0).getId(),
-                playerScores.get(1).getId(),
+                playerScores.get(playerScores.size() - 1).getId(),
                 playerScores.get(2).getId(),
-                playerScores.get(playerScores.size() - 1).getId()
+                playerScores.get(1).getId(),
+                playerScores.get(0).getId()
         );
         return ranking;
     }
 
     private Boolean taskIsForFirst(Ranking ranking) {
 
-        Player first = getPlayer(ranking.getFirstId());
-        Player last = getPlayer(ranking.getLastBestId());
+        Player first = getPlayer(players, ranking.getFirstId());
+        Player last = getPlayer(players, ranking.getLastBestId());
 
         return first.getDrinkCount() < last.getDrinkCount();
     }
 
-    private String getTask(String annotation) {
-        // random int between 2 and 5
-        Integer drinkCount = new Random().nextInt(3) + 2;
-        String task = String.format(annotation, drinkCount);
-        return task;
-    }
 }
