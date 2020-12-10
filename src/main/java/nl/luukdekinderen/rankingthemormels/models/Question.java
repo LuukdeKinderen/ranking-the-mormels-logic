@@ -2,24 +2,28 @@ package nl.luukdekinderen.rankingthemormels.models;
 
 public class Question {
 
-    private Integer questionId;
+    private Long id;
     private String question;
-    private String firstPersAnnotation;
+    private String firstAnnotation;
     private String lastBestAnnotation;
 
     public Question() {
 
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getQuestion() {
         return question;
     }
 
-    public String getFirstPersAnnotation(){
-        return firstPersAnnotation;
+    public String getFirstPersAnnotation() {
+        return firstAnnotation;
     }
 
-    public String getLastBestAnnotation(){
+    public String getLastBestAnnotation() {
         return lastBestAnnotation;
     }
 }
