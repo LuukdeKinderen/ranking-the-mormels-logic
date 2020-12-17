@@ -1,7 +1,6 @@
 package nl.luukdekinderen.rankingthemormels.controllers;
 
 import nl.luukdekinderen.rankingthemormels.eventListeners.WebSocketEventListener;
-import nl.luukdekinderen.rankingthemormels.models.Result;
 import nl.luukdekinderen.rankingthemormels.services.RoomService;
 import nl.luukdekinderen.rankingthemormels.models.GameRoom;
 
@@ -92,12 +91,9 @@ public class GameController {
 
         if(room.isDoneRanking()){
 
-            Result result = new Result(room.getPlayers(),room.getQuestion());
-            JSONObject resultJson = result.toJson();
-
             JSONObject message = new JSONObject();
 
-            message.put("result", resultJson);
+            message.put("result", room.getRoundResult().toJson() );
 
             messagingTemplate.convertAndSend("/room/" + roomId, message.toString());
         }

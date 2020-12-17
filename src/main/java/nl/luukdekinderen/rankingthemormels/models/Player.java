@@ -11,9 +11,11 @@ public class Player {
     private Boolean host;
     private Boolean active;
     private Ranking ranking;
+    private Integer rankingScore;
 
     public Player(){
         active = true;
+        rankingScore = 0;
     }
 
     public Boolean isActive() {
@@ -66,4 +68,15 @@ public class Player {
         return player;
     }
 
+    public void addRankingScore(Integer score){
+        rankingScore += score;
+    }
+
+    public void resetRankingScore() {
+        rankingScore = 0;
+    }
+
+    public Integer getRankingScore(){
+        return rankingScore;
+    }
 }

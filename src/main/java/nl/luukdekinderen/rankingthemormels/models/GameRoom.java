@@ -79,6 +79,7 @@ public class GameRoom {
         currentQuestionCount++;
         for (Player player : players) {
             player.setRanking(null);
+            player.resetRankingScore();
         }
     }
 
@@ -97,5 +98,7 @@ public class GameRoom {
     }
 
 
-
+    public RoundResult getRoundResult() {
+        return new RoundResult(players,getQuestion());
+    }
 }
