@@ -13,13 +13,18 @@ public class GameRoom {
 
     public GameRoom() {
         currentQuestionCount = -1;
+        if(players == null){
+            players = new ArrayList<>();
+        }
     }
+
+
 
     public String getId() {
         return id;
     }
 
-    public boolean AddPlayer(Player newPlayer) {
+    public boolean addPlayer(Player newPlayer) {
         boolean flag = false;
         for (Player player : players) {
             if (newPlayer.getName().equals(player.getName())) {

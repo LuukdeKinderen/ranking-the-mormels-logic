@@ -18,6 +18,14 @@ public class Player {
         rankingScore = 0;
     }
 
+    public Player(String id, String name, Boolean host) {
+        this.id = id;
+        this.name = name;
+        this.host = host;
+        active = true;
+        rankingScore = 0;
+    }
+
     public Boolean isActive() {
         return active;
     }
