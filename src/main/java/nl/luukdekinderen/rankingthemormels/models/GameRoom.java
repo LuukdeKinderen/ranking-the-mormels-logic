@@ -13,13 +13,18 @@ public class GameRoom {
 
     public GameRoom() {
         currentQuestionCount = -1;
+        if(players == null){
+            players = new ArrayList<>();
+        }
     }
+
+
 
     public String getId() {
         return id;
     }
 
-    public boolean AddPlayer(Player newPlayer) {
+    public boolean addPlayer(Player newPlayer) {
         boolean flag = false;
         for (Player player : players) {
             if (newPlayer.getName().equals(player.getName())) {
@@ -79,6 +84,7 @@ public class GameRoom {
         currentQuestionCount++;
         for (Player player : players) {
             player.setRanking(null);
+            player.resetRankingScore();
         }
     }
 
@@ -97,5 +103,7 @@ public class GameRoom {
     }
 
 
-
+    public RoundResult getRoundResult() {
+        return new RoundResult(players,getQuestion());
+    }
 }

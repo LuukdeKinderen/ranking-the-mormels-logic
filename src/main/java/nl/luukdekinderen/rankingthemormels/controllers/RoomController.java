@@ -95,7 +95,7 @@ public class RoomController {
             );
         }
 
-        boolean added = gameRoom.AddPlayer(newPlayer);
+        boolean added = gameRoom.addPlayer(newPlayer);
 
         if (added) {
             logger.info("Player \"" + newPlayer.getName() + "\" joined room: " + roomId);
