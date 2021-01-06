@@ -11,6 +11,13 @@ public class Question {
 
     }
 
+    public Question(Long id, String question, String firstAnnotation, String lastBestAnnotation) {
+        this.id = id;
+        this.question = question;
+        this.firstAnnotation = firstAnnotation;
+        this.lastBestAnnotation = lastBestAnnotation;
+    }
+
     public Long getId() {
         return id;
     }

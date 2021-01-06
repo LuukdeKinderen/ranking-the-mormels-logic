@@ -66,6 +66,7 @@ public class Player {
         imageIndex = index;
     }
 
+    public Integer getImageIndex(){return imageIndex;}
 
     public JSONObject toJSONObject() {
         JSONObject player = new JSONObject();
@@ -73,6 +74,7 @@ public class Player {
         player.put("name", name);
         player.put("imageIndex", imageIndex);
         player.put("host", host);
+        player.put("drinkCount", drinkCount);
         return player;
     }
 

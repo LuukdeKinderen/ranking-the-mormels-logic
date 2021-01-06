@@ -18,6 +18,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,12 +41,18 @@ public class GameController {
 
         if (room.isRealHost(player.getId())) {
 
-            room.nextQuestion();
+            Boolean gameOver = !room.nextQuestion();
+
 
             JSONObject message = new JSONObject();
-            message.put("question", room.getQuestion().getQuestion());
-
+            if (gameOver) {
+                message.put("gameOver", "true");
+                message.put("players", getPlayerObjs(room));
+            } else {
+                message.put("question", room.getQuestion().getQuestion());
+            }
             return message.toString();
+
         }
         return null;
     }
@@ -89,20 +96,20 @@ public class GameController {
         room.addRanking(id, ranking);
 
 
-        if(room.isDoneRanking()){
+        if (room.isDoneRanking()) {
 
             JSONObject message = new JSONObject();
 
-            message.put("result", room.getRoundResult().toJson() );
+            message.put("result", room.getRoundResult().toJson());
 
             messagingTemplate.convertAndSend("/room/" + roomId, message.toString());
         }
     }
 
 
-
     private List<JSONObject> getPlayerObjs(GameRoom gameRoom) {
         return gameRoom.getPlayers().stream()
+                .sorted(Comparator.comparingInt(Player::getDrinkCount).reversed())
                 .map(Player::toJSONObject)
                 .collect(Collectors.toList());
     }

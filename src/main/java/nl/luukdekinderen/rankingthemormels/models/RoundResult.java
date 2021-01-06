@@ -9,13 +9,12 @@ public class RoundResult {
     private Player isForPlayer;
     private List<Player> averageRanking;
     private String task;
+    private Integer drinkCount;
 
     public RoundResult(List< Player> players, Question question) {
 
-
         averageRanking = calculateAverageRanking(players);
         Boolean isForFirst = averageRanking.get(0).getDrinkCount() <= averageRanking.get(averageRanking.size() - 1).getDrinkCount();
-
 
 
         String annotation;
@@ -28,7 +27,7 @@ public class RoundResult {
         }
 
         //random Int between 2 and 5
-        Integer drinkCount = new Random().nextInt(3) + 2;
+        drinkCount = new Random().nextInt(3) + 2;
         isForPlayer.addDrinkCount(drinkCount);
         task = String.format(annotation, isForPlayer.getName(), drinkCount);
 
@@ -99,6 +98,10 @@ public class RoundResult {
 
     public String getTask() {
         return task;
+    }
+
+    public Integer getDrinkCount() {
+        return drinkCount;
     }
 }
 

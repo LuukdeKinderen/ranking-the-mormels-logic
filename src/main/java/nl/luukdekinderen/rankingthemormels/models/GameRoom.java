@@ -8,16 +8,16 @@ public class GameRoom {
 
     private String id;
     private List<Player> players;
-    private int currentQuestionCount;
+    private int currentQuestionIndex;
     private Question[] questions;
+    private Integer questionCount;
 
     public GameRoom() {
-        currentQuestionCount = -1;
-        if(players == null){
+        currentQuestionIndex = -1;
+        if (players == null) {
             players = new ArrayList<>();
         }
     }
-
 
 
     public String getId() {
@@ -25,18 +25,45 @@ public class GameRoom {
     }
 
     public boolean addPlayer(Player newPlayer) {
+        if (players.size() == 10) {
+            return false;
+        }
         boolean flag = false;
         for (Player player : players) {
             if (newPlayer.getName().equals(player.getName())) {
+                if (!player.isActive()) {
+                    players.remove(player);
+                    newPlayer.setImageIndex(player.getImageIndex());
+                    players.add(newPlayer);
+                }
                 flag = true;
             }
         }
         if (!flag) {
-            newPlayer.setImageIndex(players.size());
+            newPlayer.setImageIndex(getRandomPlayerImageIndex());
             players.add(newPlayer);
             return true;
         }
         return false;
+    }
+
+    private int getRandomPlayerImageIndex() {
+        boolean found = false;
+
+        Random rd = new Random();
+        while (!found) {
+            int index = rd.nextInt(10);
+            found = true;
+            for (Player p : players) {
+                if (p.getImageIndex().equals(index)) {
+                    found = false;
+                }
+            }
+            if (found) {
+                return index;
+            }
+        }
+        return 0;
     }
 
     public Player getPlayer(String id) {
@@ -73,18 +100,23 @@ public class GameRoom {
     }
 
     public Question getQuestion() {
-        if (currentQuestionCount > -1) {
-            Question question = questions[currentQuestionCount];
+        if (currentQuestionIndex > -1) {
+            Question question = questions[currentQuestionIndex];
             return question;
         }
         return null;
     }
 
-    public void nextQuestion() {
-        currentQuestionCount++;
+    public Boolean nextQuestion() {
         for (Player player : players) {
             player.setRanking(null);
             player.resetRankingScore();
+        }
+        if (currentQuestionIndex < questions.length - 1) {
+            currentQuestionIndex++;
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -102,8 +134,11 @@ public class GameRoom {
         return isAllDone;
     }
 
-
     public RoundResult getRoundResult() {
-        return new RoundResult(players,getQuestion());
+        return new RoundResult(players, getQuestion());
+    }
+
+    public Integer getQuestionCount() {
+        return questionCount;
     }
 }
