@@ -45,8 +45,8 @@ public class RoomController {
 
     @MessageMapping("/room/create")
     public void addRooms(@Payload GameRoom gameRoom, SimpMessageHeaderAccessor headerAccessor) {
-        //TODO: varialble questioncount
-        Question[] questions = questionService.getQuestions(10);
+        Integer questionCount = gameRoom.getQuestionCount();
+        Question[] questions = questionService.getQuestions(questionCount);
         gameRoom.setQuestions(questions);
 
         String roomId = gameRoom.getId();
